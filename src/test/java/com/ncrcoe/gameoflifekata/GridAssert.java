@@ -24,22 +24,17 @@ public class GridAssert extends AbstractAssert<GridAssert, boolean[][]> {
     }
     return this;
   }
+  
+  public GridAssert isNotEqualTo(boolean[][] expected) {
+    isNotNull();
     
-  private boolean sameDimension(boolean[][] expected) {
-    return (actual.length == expected.length)
-        && (actual[0].length == expected[0].length);
-  }
-
-  private boolean gridsMatch(boolean[][] expected) {
-    for (int row = 0; row != expected.length; row++) {
-      for (int col = 0; col != expected[0].length; col++) {
-        if (actual[row][col] != expected[row][col]) {
-          return false;
-        }
-      }
+    // check equality long hand. there is a reason for this but I'm not telling
+    if (sameDimension(expected) && gridsMatch(expected)) {
+      failWithMessage("Expected %s not to be equal to %s", gridToString(expected), gridToString(actual));
     }
-    return true;
-  }
+    return this;
+  }  
+    
 
   public GridAssert isAliveAt(int row, int col) {
     isNotNull();
@@ -58,6 +53,22 @@ public class GridAssert extends AbstractAssert<GridAssert, boolean[][]> {
     }
 
     return this;
+  }
+  
+  private boolean sameDimension(boolean[][] expected) {
+    return (actual.length == expected.length)
+        && (actual[0].length == expected[0].length);
+  }
+
+  private boolean gridsMatch(boolean[][] expected) {
+    for (int row = 0; row != expected.length; row++) {
+      for (int col = 0; col != expected[0].length; col++) {
+        if (actual[row][col] != expected[row][col]) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
   
   private String gridToString(boolean[][] grid) {
